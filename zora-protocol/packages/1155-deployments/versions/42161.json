@@ -1,0 +1,27 @@
+{
+  "deployedVersions": [
+    {
+      "version": "2.13.2",
+      "contractImplAddress": "0xC04050e04708b33302E30E5A0fB1e8c38F4EBbB0"
+    },
+    {
+      "version": "2.12.3",
+      "contractImplAddress": "0x3678862f04290E565cCA2EF163BAeb92Bb76790C"
+    },
+    {
+      "version": "2.10.1",
+      "contractImplAddress": "0xf4bf58F869c42d99d7F7AC3868B606239a634526"
+    },
+    {
+      "version": "2.7.0",
+      "contractImplAddress": "0x97eb05B8db496B12244BCcf17CF377d00a99b67a"
+    }
+  ],
+  "targetVersion": {
+    "version": "2.13.2",
+    "contractImplAddress": "0xC04050e04708b33302E30E5A0fB1e8c38F4EBbB0"
+  },
+  "missingUpgradePaths": [],
+  "missingUpgradePathTargets": [],
+  "missingUpgradePathCalls": []
+}

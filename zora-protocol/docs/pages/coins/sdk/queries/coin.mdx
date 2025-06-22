@@ -1,0 +1,111 @@
+# Coin Queries
+
+The Coins SDK provides several query functions to fetch information about specific coins. This page details the available coin query functions, their parameters, and includes usage examples.
+
+## Available Queries
+
+### getCoin
+
+The `getCoin` function retrieves detailed information about a specific coin, including its metadata, market data, and creator information.
+
+#### Parameters
+
+```ts twoslash
+type GetCoinParams = {
+  address: string;   // The coin contract address
+  chain?: number;    // Optional: The chain ID (defaults to Base: 8453)
+};
+```
+
+#### Usage Example
+
+```ts twoslash
+// [!include ~/snippets/coins/queries/getCoin.ts]
+```
+
+#### Response Structure
+
+The response includes a `data` object containing a `zora20Token` object with the following properties:
+
+```ts twoslash
+import { GetCoinResponse } from "@zoralabs/coins-sdk";
+
+// The Zora20Token type is imported from the SDK's generated types.
+// It includes detailed information about a specific coin, such as its metadata, market data, and creator information.
+type Zora20Token = GetCoinResponse['zora20Token'];
+//    ^?
+
+
+
+
+
+//
+
+```
+
+### getCoins
+
+The `getCoins` function retrieves information about multiple coins at once, useful for batch processing or displaying multiple coins.
+
+#### Parameters
+
+```ts twoslash
+type GetCoinsParams = {
+  coins: {
+    collectionAddress: string;
+    chainId: number;
+  }[]
+};
+```
+
+#### Usage Example
+
+```ts twoslash
+// [!include ~/snippets/coins/queries/getCoins.ts]
+```
+
+#### Response Structure
+
+The response includes a `zora20Tokens` array containing objects with the same structure as the `zora20Token` object in the `getCoin` response.
+
+### getCoinComments
+
+The `getCoinComments` function retrieves comments associated with a specific coin, useful for displaying community engagement.
+
+#### Parameters
+
+```ts twoslash
+type GetCoinCommentsParams = {
+  address: string;    // The coin contract address
+  chain?: number;     // Optional: The chain ID (defaults to Base: 8453)
+  after?: string;     // Optional: Pagination cursor for fetching next page
+  count?: number;     // Optional: Number of comments to return per page
+};
+```
+
+#### Usage Example
+
+```ts twoslash
+// [!include ~/snippets/coins/queries/getCoinComments.ts]
+```
+
+#### Paginating Through All Comments
+
+To fetch all comments for a coin, you can use pagination:
+
+```ts twoslash
+// [!include ~/snippets/coins/queries/getCoinCommentsPagination.ts]
+```
+
+#### Response Structure
+
+The response includes a `comments` array and pagination information:
+
+
+## Error Handling
+
+All query functions follow the same error handling pattern. When an error occurs, the promise is rejected with an error object that includes details about what went wrong.
+
+```ts twoslash
+// [!include ~/snippets/coins/queries/queryErrors.ts]
+```

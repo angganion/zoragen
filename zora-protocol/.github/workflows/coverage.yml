@@ -1,0 +1,65 @@
+on:
+  workflow_call:
+    inputs:
+      package_folder:
+        required: true
+        type: string
+      files_to_ignore:
+        required: false
+        type: string
+        default: ""
+      coverage_args:
+        required: false
+        type: string
+        default: ""
+
+env:
+  package_folder: ${{ inputs.package_folder }}
+  FOUNDRY_PROFILE: ci
+
+jobs:
+  check:
+    strategy:
+      fail-fast: true
+
+    name: Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          submodules: recursive
+
+      - name: Install node deps and foundry
+        uses: ./.github/actions/setup_deps
+
+      - name: Cache build
+        uses: ./.github/actions/cache_foundry_build
+        with:
+          package_folder: ${{ env.package_folder }}
+          foundry_profile: coverage
+
+      - name: Run Forge coverage
+        run: cd $package_folder && forge coverage --report lcov ${{ inputs.coverage_args }} --lcov-version 2
+        env:
+          TENDERLY_KEY: ${{ secrets.TENDERLY_KEY }}
+          ALCHEMY_KEY: ${{ secrets.ALCHEMY_KEY }}
+          CONDUIT_KEY: ${{ secrets.CONDUIT_KEY }}
+
+      - name: Setup LCOV
+        uses: hrishikesh-kadam/setup-lcov@9c4c3fa1c712097933f8772c19b2d1f6d182f2d5 # v1
+
+      - name: Filter files to ignore
+        run: |
+          cd ./${{ env.package_folder }} && lcov --rc lcov_branch_coverage=1 \
+          --remove lcov.info \
+          --ignore-errors unused \
+          --output-file lcov.info "*node_modules*" "*test*" "*script*" ${{ inputs.files_to_ignore }}
+
+      - name: Report code coverage
+        uses: iainnash/github-actions-report-lcov@31a379b009f70ff23695e3f952218c546ac71841 # v12
+        with:
+          output-html: false
+          coverage-files: ./${{ env.package_folder }}/lcov.info
+          minimum-coverage: 87
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          working-directory: ./${{ env.package_folder }}

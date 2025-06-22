@@ -1,0 +1,35 @@
+on:
+  workflow_call:
+    inputs:
+      package_folder:
+        required: true
+        type: string
+      precache:
+        required: false
+        type: string
+
+jobs:
+  check:
+    strategy:
+      fail-fast: true
+
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Install node deps and foundry
+        uses: ./.github/actions/setup_deps
+
+      - name: Run precache command
+        if: ${{ inputs.precache != null }}
+        run: cd ${{ inputs.package_folder}} && ${{ inputs.precache }}
+
+      - name: Load foundry cache
+        uses: ./.github/actions/cache_foundry_build
+        with:
+          package_folder: ${{ inputs.package_folder }}
+
+      - name: Build contracts
+        run: |
+          cd ${{ inputs.package_folder}} && forge build

@@ -1,0 +1,59 @@
+{
+  "private": true,
+  "repository": "git@github.com:ourzora/zora-protocol.git",
+  "license": "MIT",
+  "scripts": {
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "dev": "turbo run dev",
+    "docs:preview": "pnpm run --filter docs preview",
+    "build:docs:coins": "pnpm turbo run 'docs#build:site'",
+    "build:docs:nft": "pnpm turbo run 'nft-docs#build:site'",
+    "update-version": "changeset version && pnpm docs:copy-changelogs && turbo run update-contract-version",
+    "docs:copy-changelogs": "pnpm --filter=docs copy-changelog",
+    "lint": "turbo run lint",
+    "format": "turbo run format",
+    "release": "turbo run build && changeset publish",
+    "changesets": "changesets",
+    "prepare": "husky install",
+    "run-lint-staged": "lint-staged"
+  },
+  "devDependencies": {
+    "@changesets/cli": "2.26.2",
+    "eslint": "^8.48.0",
+    "husky": ">=6",
+    "lint-staged": ">=10",
+    "prettier": "^3.0.3",
+    "prettier-plugin-solidity": "^1.4.1",
+    "tsx": "^4.19.0",
+    "turbo": "^2.5.3"
+  },
+  "name": "zora-protocol",
+  "lint-staged": {
+    "*.sol": "prettier --write",
+    "*.ts": "prettier --write",
+    "*.js": "prettier --write",
+    "*.mjs": "prettier --write",
+    "*.json": "prettier --write"
+  },
+  "packageManager": "pnpm@9.6.0",
+  "ignore": [
+    "*.template.sol"
+  ],
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=3"
+  },
+  "pnpm": {
+    "overrides": {
+      "viem": "^2.21.21",
+      "@wagmi/cli": "^2.1.0",
+      "@solidity-parser/parser": "0.19.0",
+      "ds-test": "https://github.com/dapphub/ds-test#cd98eff28324bfac652e63a239a60632a761790b",
+      "forge-std": "https://github.com/foundry-rs/forge-std#v1.9.4",
+      "tsx": "^4.19.4",
+      "typescript": "^5.8.3",
+      "tsup": "^8.4.0"
+    }
+  }
+}
